@@ -45,7 +45,7 @@ const Dashboard = () => {
       if (!token) return navigate('/login');
       
       try {
-        const res = await axios.get('http://localhost:5000/api/auth/me', { headers: { Authorization: `Bearer ${token}` }});
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/auth/me`, { headers: { Authorization: `Bearer ${token}` }});
         setRole(res.data.role);
         setUserName(res.data.name);
         setUserEmail(res.data.email);
@@ -83,21 +83,21 @@ const Dashboard = () => {
       
       if (role === 'admin') {
         if (activeTab === 'reports') {
-            const res = await axios.get('http://localhost:5000/api/admin/reports', config);
+            const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/admin/reports`, config);
             setData(res.data);
         } else if (activeTab === 'manage_flights') {
-            const res = await axios.get('http://localhost:5000/api/flights', config);
+            const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/flights`, config);
             setFlights(res.data);
         } else if (activeTab === 'manage_users') {
-            const res = await axios.get('http://localhost:5000/api/admin/users', config);
+            const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/admin/users`, config);
             setUsers(res.data);
         } else if (activeTab === 'manage_reservations') {
-            const res = await axios.get('http://localhost:5000/api/admin/reservations', config);
+            const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/admin/reservations`, config);
             setReservations(res.data);
         }
       } else {
         if (activeTab === 'my_bookings') {
-            const res = await axios.get('http://localhost:5000/api/reservations/my', config);
+            const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/reservations/my`, config);
             setData(res.data);
         }
       }
@@ -115,11 +115,11 @@ const Dashboard = () => {
       try {
           const token = localStorage.getItem('token');
           if (editFlightId) {
-              await axios.put(`http://localhost:5000/api/admin/flights/${editFlightId}`, formData, { headers: { Authorization: `Bearer ${token}` }});
+              await axios.put(`${import.meta.env.VITE_API_URL}/api/admin/flights/${editFlightId}`, formData, { headers: { Authorization: `Bearer ${token}` }});
               showMsg('Flight updated successfully!');
               setEditFlightId(null);
           } else {
-              await axios.post('http://localhost:5000/api/flights', { ...formData, availableSeats: formData.totalSeats }, { headers: { Authorization: `Bearer ${token}` }});
+              await axios.post(`${import.meta.env.VITE_API_URL}/api/flights`, { ...formData, availableSeats: formData.totalSeats }, { headers: { Authorization: `Bearer ${token}` }});
               showMsg('Flight added successfully!');
           }
           setFormData({ flightNumber: '', airline: '', source: '', destination: '', departureTime: '', arrivalTime: '', totalSeats: '', price: '', status: 'Scheduled' });
@@ -134,7 +134,7 @@ const Dashboard = () => {
       if(!window.confirm("Delete this flight permanently?")) return;
       try {
           const token = localStorage.getItem('token');
-          await axios.delete(`http://localhost:5000/api/admin/flights/${id}`, { headers: { Authorization: `Bearer ${token}` }});
+          await axios.delete(`${import.meta.env.VITE_API_URL}/api/admin/flights/${id}`, { headers: { Authorization: `Bearer ${token}` }});
           showMsg('Flight deleted!');
           fetchData();
       } catch (err) {
@@ -163,7 +163,7 @@ const Dashboard = () => {
       if(!window.confirm("Delete this user?")) return;
       try {
           const token = localStorage.getItem('token');
-          await axios.delete(`http://localhost:5000/api/admin/users/${id}`, { headers: { Authorization: `Bearer ${token}` }});
+          await axios.delete(`${import.meta.env.VITE_API_URL}/api/admin/users/${id}`, { headers: { Authorization: `Bearer ${token}` }});
           showMsg('User deleted!');
           fetchData();
       } catch (err) {
@@ -175,7 +175,7 @@ const Dashboard = () => {
       e.preventDefault();
       try {
           const token = localStorage.getItem('token');
-          await axios.put(`http://localhost:5000/api/admin/users/${id}`, { name: userEditData.name, email: userEditData.email, role: userEditData.role }, { headers: { Authorization: `Bearer ${token}` }});
+          await axios.put(`${import.meta.env.VITE_API_URL}/api/admin/users/${id}`, { name: userEditData.name, email: userEditData.email, role: userEditData.role }, { headers: { Authorization: `Bearer ${token}` }});
           showMsg('User updated!');
           setEditUserId(null);
           fetchData();
@@ -188,7 +188,7 @@ const Dashboard = () => {
   const openSeatView = async (flightId) => {
       try {
           const token = localStorage.getItem('token');
-          const res = await axios.get(`http://localhost:5000/api/flights/${flightId}/seats`, { headers: { Authorization: `Bearer ${token}` }});
+          const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/flights/${flightId}/seats`, { headers: { Authorization: `Bearer ${token}` }});
           setFlightSeatsData({ totalSeats: res.data.totalSeats, bookedSeats: res.data.bookedSeats });
           setSeatViewFlight(flightId);
       } catch(err) {
@@ -200,7 +200,7 @@ const Dashboard = () => {
   const handleBackup = async () => {
       try {
           const token = localStorage.getItem('token');
-          const res = await axios.get('http://localhost:5000/api/admin/backup', { headers: { Authorization: `Bearer ${token}` }});
+          const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/admin/backup`, { headers: { Authorization: `Bearer ${token}` }});
           const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(res.data));
           const dlAnchorElem = document.createElement('a');
           dlAnchorElem.setAttribute("href", dataStr);
@@ -220,7 +220,7 @@ const Dashboard = () => {
           try {
               const token = localStorage.getItem('token');
               const jsonData = JSON.parse(e.target.result);
-              await axios.post('http://localhost:5000/api/admin/restore', jsonData, { headers: { Authorization: `Bearer ${token}` }});
+              await axios.post(`${import.meta.env.VITE_API_URL}/api/admin/restore`, jsonData, { headers: { Authorization: `Bearer ${token}` }});
               showMsg('Database restored successfully from JSON!');
               fetchData();
           } catch(err) {
@@ -237,7 +237,7 @@ const Dashboard = () => {
       setHasSearched(true);
       try {
           const query = new URLSearchParams(searchData).toString();
-          const res = await axios.get(`http://localhost:5000/api/flights/search?${query}`);
+          const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/flights/search?${query}`);
           setAvailableFlights(res.data);
       } catch (err) {
           showMsg('Network error while searching for flights', 'error');
@@ -263,7 +263,7 @@ const Dashboard = () => {
       setCancelLoading(true);
       try {
           const token = localStorage.getItem('token');
-          const res = await axios.put(`http://localhost:5000/api/reservations/${cancelTarget._id}/cancel`, {}, { headers: { Authorization: `Bearer ${token}` }});
+          const res = await axios.put(`${import.meta.env.VITE_API_URL}/api/reservations/${cancelTarget._id}/cancel`, {}, { headers: { Authorization: `Bearer ${token}` }});
           const refund = res.data.refundAmount;
           showMsg(refund > 0 ? `Booking cancelled. ₹${refund.toLocaleString('en-IN')} will be refunded.` : 'Booking cancelled. No refund applicable for this tier.');
           setCancelTarget(null);

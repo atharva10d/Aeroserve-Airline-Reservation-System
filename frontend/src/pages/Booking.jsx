@@ -25,7 +25,7 @@ const Booking = () => {
   useEffect(() => {
     const fetchFlight = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/flights/${flightId}`);
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/flights/${flightId}`);
         setFlight(res.data);
         setBookedSeats(res.data.bookedSeats || []);
       } catch (err) {

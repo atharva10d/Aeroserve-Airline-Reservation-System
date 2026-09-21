@@ -19,7 +19,7 @@ const Login = ({ isRegisterMode = false }) => {
     setError('');
     try {
       const endpoint = isRegister ? 'register' : 'login';
-      const res = await axios.post(`http://localhost:5000/api/auth/${endpoint}`, formData);
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/${endpoint}`, formData);
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('role', res.data.user.role);
       localStorage.setItem('name', res.data.user.name);

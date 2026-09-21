@@ -35,7 +35,7 @@ export default function CheckoutForm({ bookingDetails }) {
       try {
         const token = localStorage.getItem('token');
         // ACTUALLY SAVE THE BOOKING IN MONGODB NOW THAT PAYMENT SECURED
-        const res = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/reservations`, {
+        const res = await axios.post(`${import.meta.env.VITE_API_URL || ${import.meta.env.VITE_API_URL || '${import.meta.env.VITE_API_URL || `${import.meta.env.VITE_API_URL}`}'}}/api/reservations`, {
           flightId: bookingDetails.flightId,
           passengers: bookingDetails.passengers,
           paymentMethod: bookingDetails.paymentMethod || 'Credit Card'
